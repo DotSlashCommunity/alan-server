@@ -16,6 +16,18 @@ if "--create" in argv:
     slash.connect()
     slash.create_tables([Reply, Detail, Question])
 
+if "--clear" in argv:
+	if raw_input("Are you sure [y/n]? ").strip() == "y":
+		
+		query = Reply.delete()
+		query.execute()
+
+		query = Detail.delete()
+		query.execute()
+
+		query = Question.delete()
+		query.execute()
+
 if "--fill" in argv:
 
 	# fill samples in the database
@@ -43,15 +55,3 @@ if "--fill" in argv:
 		opt_c="Artificial Intelligence",
 		opt_d="Mathematician",
 		answer="Mathematician")
-
-if "--clear" in argv:
-	if raw_input("Are you sure [y/n]? ").strip() == "y":
-		
-		query = Reply.delete()
-		query.execute()
-
-		query = Detail.delete()
-		query.execute()
-
-		query = Question.delete()
-		query.execute()
