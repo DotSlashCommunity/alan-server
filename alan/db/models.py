@@ -1,16 +1,8 @@
 # @author ksdme
 # declares models
+import json
 from peewee import *
-
-# custom json model
-class JSONField(TextField):
-    
-    def db_value(self, value):
-        return json.dumps(value)
-
-    def python_value(self, value):
-        if value is not None:
-            return json.loads(value)
+from playhouse.sqlite_ext import JSONField
 
 # details model wrapper
 class DetailModel(object):
@@ -20,7 +12,6 @@ class DetailModel(object):
 
         class Detail(Model):
 
-            serial = IntegerField(null=False, primary_key=True)
             name = CharField(null=False, max_length=40)
             email = CharField(null=False, max_length=50)
             roll = IntegerField(null=False, unique=True)
@@ -42,13 +33,12 @@ class QuestionModel(object):
 
         class Question(Model):
 
-            serial = IntegerField(null=False, primary_key=True)
             question = TextField(null=False)
             opt_a = CharField(null=False, max_length=100)
             opt_b = CharField(null=False, max_length=100)
             opt_c = CharField(null=False, max_length=100)
             opt_d = CharField(null=False, max_length=100)
-            answer = CharField(null=False, max_length=100)
+            answer = CharField(null=False, max_length=100, constraints=[Check('answer IN (opt_a, opt_b, opt_c, opt_d)')])
 
             class Meta:
                 database = db
@@ -58,10 +48,10 @@ class QuestionModel(object):
 
 # score model wrapper
 class ReplyModel(object):
-
-    CORRECT_ANSWER = 1
-    WRONG_ANSWER = 0
+    
     UNANSWERED = -1
+    CORRECT = 1
+    WRONG = 0
 
     @staticmethod
     def replies_model():
@@ -73,7 +63,6 @@ class ReplyModel(object):
         class Reply(Model):
 
             roll = IntegerField(null=False, unique=True)
-            serial = IntegerField(null=False, primary_key=True)
             replies = JSONField(null=False, default=ReplyModel.replies_model)
 
             class Meta:
