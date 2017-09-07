@@ -74,7 +74,7 @@ def getQuestionStatus(roll, qno, rmodel, cycle=20):
 
 	try:
 		reply = rmodel.get(rmodel.roll == roll)
-		return reply.replies[qno]
+		return reply.replies[unicode(qno)]
 	except rmodel.DoesNotExist:
 		return None
 
@@ -120,15 +120,19 @@ def getPresentableQuestion(roll, qno, qmodel, rmodel, cycle=20):
 
 	return {
 	    "q": question.question,
-	    "o": shuffledAnswers(question)
+	    "o": shuffledAnswers(question),
 	    "l": not isEditableQuestion(roll, qno, rmodel, cycle)
 	}
 
-def getPresentableSubmission(roll, qno, answer, qmodel, rmodel, cycle=20):
+def getPresentableSubmission(roll, qno, answer, qmodel, rmodel, rmodelgen, cycle=20):
 	"""
 		validates and lets you know if
 		the submitted answer was right
 	"""
+
+	# check if we have an answer
+	if answer is None or answer == "":
+		return { "e": True, "m": "e" }
 
 	# non-offset qno, now do it only if it is an editable one
 	if not isEditableQuestion(roll, qno, rmodel, cycle):
@@ -142,9 +146,26 @@ def getPresentableSubmission(roll, qno, answer, qmodel, rmodel, cycle=20):
 		return { "e": True }
 
 	# verify the answer and do recording
-	if verifyAnswer(question, answer):
-		pass	
+	correct = verifyAnswer(question, answer)
+		
+	# this is the base thing that manages all
+	try:
+		player = rmodel.get(rmodel.roll == roll)
+	except reply.DoesNotExist:
+		return { "e": True, "m": "n" }
+
+	# apparetly json loads
+	# make the qno's unicode
+	qno = unicode(qno)
+
+	if player.replies[qno] == rmodelgen.UNANSWERED:
+		player.replies[qno] = rmodelgen.CORRECT if correct else rmodelgen.WRONG
+		player.save()
+		
+		return { "e": False }
+	else:
+		return { "e": True, "m": "l" }
 
 	# let the guy know we
 	# didn't get any error
-	return { "e": False }
+	return { "e": True }
