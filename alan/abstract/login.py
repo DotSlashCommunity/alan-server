@@ -79,7 +79,7 @@ def doLogin(roll, phone, session, dmodel):
 		# no error occoured, log that
 		# guy in
 
-		session["roll"] = roll
+		session["roll"] = int(roll)
 		incActiveSession(roll)
 
 		return { "e": False }
