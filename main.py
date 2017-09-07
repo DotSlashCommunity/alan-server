@@ -5,6 +5,7 @@ from peewee import SqliteDatabase
 from alan.abstract.login import *
 from alan.abstract.scores import *
 from alan.abstract.questions import *
+from alan.abstract.moderator import *
 from alan.db.models import QuestionModel, DetailModel, ReplyModel
 
 from flask import Flask, jsonify, request, session
@@ -25,6 +26,15 @@ app.config.from_pyfile('main.cfg')
 @app.route("/login")
 def login():
 
+    # check if the quiz event is alive
+    if didQuizEnd():
+        return jsonify({ "e": True, "m": "qe" })
+
+    # check if logging in has been
+    # freezed
+    if not getLoginState():
+        return jsonify({ "e": True, "m": "lf" })
+
     # the details
     roll = request.args.get("r")
     phone = request.args.get("p")
@@ -36,6 +46,11 @@ def login():
 @app.route("/logout")
 def logout():
 
+    # check if logging in has been
+    # freezed
+    if not getLoginState():
+        return jsonify({ "e": True, "m": "lf" })
+
     return jsonify(doLogout(
         session))
 
@@ -44,6 +59,15 @@ def logout():
 # -----------------------------------
 @app.route("/question/<int:qno>")
 def getQuestion(qno):
+
+    # check if the quiz event is alive
+    if didQuizEnd():
+        return jsonify({ "e": True, "m": "qe" })
+
+    # know if the quiz has started yet,
+    # check the flag for it
+    if not getQuizState():
+        return jsonify({ "e": True, "m": "qf" })
 
     if not checkLoggedIn(session):
         return jsonify({ "e": True, "m": "n" })
@@ -54,11 +78,67 @@ def getQuestion(qno):
 @app.route("/submit/<int:qno>")
 def submitAnswer(qno):
 
+    # check if the quiz event is alive
+    if didQuizEnd():
+        return jsonify({ "e": True, "m": "qe" })
+
+    # know if the quiz has started yet,
+    # check the flag for it
+    if not getQuizState():
+        return jsonify({ "e": True, "m": "qf" })
+
     if not checkLoggedIn(session):
         return jsonify({ "e": True, "m": "n" })
 
     return jsonify(getPresentableSubmission(
-        getLoggedIn(session), qno, request.args.get("a"), Question, Reply, 20))
+        getLoggedIn(session), qno, request.args.get("a"), Question, Reply, ReplyModel, 20))
+
+# -----------------------------------
+# Moderator Utils
+# -----------------------------------
+@app.route("/state/quiz/<int:state>")
+def setQuizStateRouter(state):
+
+    # get the password
+    paswd = request.args.get("w")
+
+    return jsonify(setQuizState(
+        paswd, state))
+
+@app.route("/state/quiz")
+def getQuizStateRouter():
+    
+    return jsonify(
+        getQuizState())
+
+@app.route("/state/login/<int:state>")
+def setLoginStateRouter(state):
+
+    # get the password
+    paswd = request.args.get("w")
+
+    return jsonify(setLoginState(
+        paswd, state))
+
+@app.route("/state/login")
+def getLoginStateRouter():
+    
+    return jsonify(
+        getLoginState())
+
+@app.route("/timer/start")
+def startTimerRouter():
+
+    # get the password
+    paswd = request.args.get("w")
+
+    return jsonify(startTimer(
+        paswd))
+
+@app.route("/timer")
+def getTimerRouter():
+
+    return jsonify(getTimer())
 
 # -----------------------------------
 # Misc Value Utils
@@ -66,8 +146,8 @@ def submitAnswer(qno):
 @app.route("/scores")
 def getScoresRouter():
 
-    return jsonify(
-        getScores(Reply))
+    return jsonify({
+        "list": getScores(Reply)})
 
 app.debug = True
 app.run()
