@@ -1,0 +1,16 @@
+Simple Reminder Section
+
+During the /login end-points, it takes a GET Method with parameters as
+r -> roll and p -> phone, It then verifies stuff and returns an approp
+e -> error and m -> message as JSON, representing if an error occoured
+and if it did what part of the Server did that!
+
+    m -> :
+        a: already logged in
+        l: locked question
+        n: not logged in
+        s: not present
+        p: phone
+        r: roll
+
+    l -> locked question ?

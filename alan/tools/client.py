@@ -2,6 +2,7 @@
 # alan tools, does much
 from sys import argv
 from peewee import *
+from random import randint
 from alan.db.models import *
 
 # db connection
@@ -47,11 +48,12 @@ if "--fill" in argv:
 		name="Kilari Teja",
 		email="kilariteja9@gmail.com")
 
-	# fill new question
-	question = Question.create(
-		question="Who is Alan Turing ?",
-		opt_a="Computer Scientist",
-		opt_b="Mechanic",
-		opt_c="Artificial Intelligence",
-		opt_d="Mathematician",
-		answer="Mathematician")
+	# fill sample questions
+	for _ in xrange(20):
+		Question.create(
+			question="{}: Why is this Kolaveri Di ?".format(_),
+			opt_a="{}".format(_),
+			opt_b="{}".format(_+1),
+			opt_c="{}".format(_+2),
+			opt_d="{}".format(_+3),
+			answer="{}".format(_+randint(0, 3)))

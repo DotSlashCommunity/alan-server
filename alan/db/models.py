@@ -18,6 +18,7 @@ class DetailModel(object):
             year = IntegerField(null=False, constraints=[Check('year > 0 AND year < 5')])
             branch = CharField(null=False, max_length=3, constraints=[Check('branch IN ("CSE", "ECE", "MAE", "CVE", "EEE")')])
             phone = IntegerField(null=False, unique=True, constraints=[Check('phone >= 7000000000 AND phone <= 9999999999')], index=False)
+            present = BooleanField(null=False, default=False)
 
             class Meta:
                 database = db
