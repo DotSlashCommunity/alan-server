@@ -1,5 +1,7 @@
 # @author ksdme
 # main server script
+# to run using uWSGI
+# uwsgi --http :5000 --wsgi-file main.py --callable app
 from peewee import SqliteDatabase
 
 from alan.abstract.login import *
@@ -9,6 +11,7 @@ from alan.abstract.moderator import *
 from alan.db.models import QuestionModel, DetailModel, ReplyModel
 
 from flask import Flask, jsonify, request, session
+from flask_cors import CORS
 
 # sqlite and models database
 slash = SqliteDatabase("slash.db")
@@ -19,6 +22,12 @@ Question = QuestionModel.getModel(slash)
 # initialise app
 app = Flask(__name__)
 app.config.from_pyfile('main.cfg')
+CORS(app, supports_credentials=True)
+
+# Make Sessions Permanent
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 # -----------------------------------
 # Logging In and Out
@@ -53,6 +62,11 @@ def logout():
 
     return jsonify(doLogout(
         session))
+
+@app.route("/me")
+def getMe():
+
+    return jsonify({ "m": getLoggedIn(session) })
 
 # -----------------------------------
 # Questioning and Submitting Section
@@ -149,5 +163,6 @@ def getScoresRouter():
     return jsonify({
         "list": getScores(Reply)})
 
-app.debug = True
-app.run()
+if __name__ == "__main__":
+    app.debug = True
+    app.run(host='0.0.0.0', threaded=True)
