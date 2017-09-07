@@ -56,7 +56,7 @@ class ReplyModel(object):
 
     @staticmethod
     def replies_model():
-        return dict([(l, ReplyModel.UNANSWERED) for l in xrange(20)])
+        return dict([(l, ReplyModel.UNANSWERED) for l in xrange(1, 21)])
 
     @staticmethod
     def getModel(db):
