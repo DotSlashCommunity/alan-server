@@ -66,7 +66,7 @@ def logout():
 @app.route("/me")
 def getMe():
 
-    return jsonify({ "m": getLoggedIn(session) })
+    return jsonify({ "m": int(getLoggedIn(session)) })
 
 # -----------------------------------
 # Questioning and Submitting Section

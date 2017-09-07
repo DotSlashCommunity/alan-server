@@ -16,7 +16,7 @@ def incActiveSession(roll):
 	try:
 		ACTIVE_SESSIONS[roll] += 1
 	except KeyError:
-		ACTIVE_SESSIONS[roll] = 1 
+		ACTIVE_SESSIONS[roll] = 1
 
 def decActiveSession(roll):
 	"""
@@ -79,7 +79,7 @@ def doLogin(roll, phone, session, dmodel):
 		# no error occoured, log that
 		# guy in
 
-		session["roll"] = int(roll)
+		session["roll"] = roll
 		incActiveSession(roll)
 
 		return { "e": False }
