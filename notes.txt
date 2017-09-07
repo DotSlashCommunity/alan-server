@@ -6,11 +6,17 @@ e -> error and m -> message as JSON, representing if an error occoured
 and if it did what part of the Server did that!
 
     m -> :
+        m: multiple concurrent login's
         a: already logged in
         l: locked question
         n: not logged in
         s: not present
         p: phone
         r: roll
+        w: wrong key
+        e: answer missing
+        qf: quiz has been freezed
+        lf: login has been freezed
+        qe: quiz event has ended
 
     l -> locked question ?
