@@ -154,6 +154,16 @@ def getTimerRouter():
 
     return jsonify(getTimer())
 
+@app.route("/state/clear/<int:roll>")
+def clearSessionForRoll(roll):
+
+    # get the password
+    paswd = request.args.get("w")
+
+    # simply return clearer
+    return jsonify(clearSession(
+        roll, paswd))
+
 # -----------------------------------
 # Misc Value Utils
 # -----------------------------------

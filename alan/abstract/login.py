@@ -33,6 +33,8 @@ def decActiveSession(roll):
 	if ACTIVE_SESSIONS[roll] < 0:
 		ACTIVE_SESSIONS[roll] = 0
 
+	return ACTIVE_SESSIONS[roll]
+
 def getActiveSessionCount(roll):
 	"""
 		returns the no. of active
@@ -43,6 +45,14 @@ def getActiveSessionCount(roll):
 		return ACTIVE_SESSIONS[roll]
 	except KeyError:
 		return 0
+
+def getSessionCounter():
+	"""
+		simply returns the session
+		holder 
+	"""
+
+	return ACTIVE_SESSIONS
 
 def doLogin(roll, phone, session, dmodel):
 	"""
