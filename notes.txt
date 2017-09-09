@@ -15,6 +15,7 @@ and if it did what part of the Server did that!
         r: roll
         w: wrong key
         e: answer missing
+        z: misc error
         qf: quiz has been freezed
         lf: login has been freezed
         qe: quiz event has ended

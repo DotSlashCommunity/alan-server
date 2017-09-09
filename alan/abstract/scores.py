@@ -18,4 +18,18 @@ def getScores(rmodel):
 	# stays ordered!
 	return map(list, (sorted(
 		scores.iteritems(),
-		key=lambda l: l[1])))
+		key=lambda l: l[1], reverse=True)))
+
+def getDetails(dmodel):
+	"""
+		get the details of the users from
+		database, using an dmodel
+	"""
+	try:
+		playas, actual = dmodel.select().where(dmodel.present != 0), {}
+		for player in playas:
+			actual[player.roll] = player.name
+	except:
+		return { "e": True, "m": "z" }
+
+	return actual
