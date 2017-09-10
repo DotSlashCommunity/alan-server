@@ -96,6 +96,24 @@ def isEditableQuestion(roll, qno, rmodel, cycle=20):
 
 	return False
 
+def getAllReplied(roll, rmodel):
+	"""
+		returns all those questions to
+		which an answer has been submitted
+	"""
+
+	try:
+		model = rmodel.get(rmodel.roll == roll)
+	except rmodel.DoesNotExist:
+		return { "e": True }	
+
+	# the questions that are empty
+	qs = map(lambda l: l[0] if l[1] != -1 else None,
+			model.replies.iteritems())
+	qs = filter(lambda l: l is not None, qs)
+
+	return qs
+
 def verifyAnswer(question, answer):
 	"""
 		requires a question instance and
