@@ -45,7 +45,7 @@ def login():
         return jsonify({ "e": True, "m": "lf" })
 
     # the details
-    roll = request.args.get("r")
+    roll = str(int(request.args.get("r")))
     phone = request.args.get("p")
 
     # try loggingin in
@@ -153,6 +153,23 @@ def startTimerRouter():
 def getTimerRouter():
 
     return jsonify(getTimer())
+
+@app.route("/state/clear/<int:roll>")
+def clearSessionForRoll(roll):
+
+    # get the password
+    paswd = request.args.get("w")
+
+    # simply return clearer
+    return jsonify(clearSession(
+        roll, paswd))
+
+@app.route("/details")
+def getAllDetails():
+
+    # simply return stuff
+    return jsonify(
+        getDetails(Detail))
 
 # -----------------------------------
 # Misc Value Utils

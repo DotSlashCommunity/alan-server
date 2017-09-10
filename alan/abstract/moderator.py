@@ -2,6 +2,7 @@
 # holds the methods to administer
 # the quiz, for eg: timing, login blocking etc
 from time import time
+from alan.abstract.login import decActiveSession, getSessionCounter
 
 # Global Handler
 ADMIN_KEY = "CHANGETHEWORLD"
@@ -98,3 +99,25 @@ def didQuizEnd():
 	"""
 
 	return QUIZ_ENDED_FLAG
+
+def clearSession(roll, pwd):
+	"""
+		clears a session for a given
+		user roll no
+	"""
+
+	# roll is unicode elsewhere
+	roll = unicode(roll)
+
+	# ensure that he is our guy
+	if pwd != ADMIN_KEY:
+		return { "e": True, "m": "w" }
+
+	# check if it exists and only then do it
+	if roll not in getSessionCounter().keys():
+		return { "e": True, "m": "r" }
+
+	# simply keep dec'ing the counter
+	while decActiveSession(roll) > 0: pass
+
+	return { "e": False }
