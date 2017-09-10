@@ -125,6 +125,12 @@ def getQuizStateRouter():
     return jsonify(
         getQuizState())
 
+@app.route("/quiz/end")
+def setQuizStateEnd():
+
+    return jsonify(
+        endQuiz(request.args.get("w")))
+
 @app.route("/state/login/<int:state>")
 def setLoginStateRouter(state):
 
