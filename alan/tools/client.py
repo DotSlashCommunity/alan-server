@@ -125,5 +125,8 @@ if "--import" in argv:
 					year=int(detail[4]),
 					branch=detail[5],
 					present=0)
+
+				Reply.create(
+					roll=int(detail[0]))
 			except Exception as e:
 				print "[!] Failed: {}; ".format(detail[0]), e
