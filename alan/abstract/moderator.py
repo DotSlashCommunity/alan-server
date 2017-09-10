@@ -18,6 +18,7 @@ def startTimer(pwd):
 		quiz, nothing happens if
 		the time actually crosses
 	"""
+	global TIMER_STARTED_AT
 
 	if pwd != ADMIN_KEY:
 		return { "e": True, "m": "w" }
