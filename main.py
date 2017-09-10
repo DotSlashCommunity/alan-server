@@ -107,6 +107,17 @@ def submitAnswer(qno):
     return jsonify(getPresentableSubmission(
         getLoggedIn(session), qno, request.args.get("a"), Question, Reply, ReplyModel, 20))
 
+@app.route("/answered")
+def getAllAnswrdReplies():
+
+    # check logged in
+    if not checkLoggedIn(session):
+        return jsonify({ "e": True, "m": "n" })
+
+    # return away
+    return jsonify(
+        getAllReplied(getLoggedIn(session), Reply))
+
 # -----------------------------------
 # Moderator Utils
 # -----------------------------------
@@ -155,7 +166,7 @@ def startTimerRouter():
     return jsonify(startTimer(
         paswd))
 
-@app.route("/timer")
+@app.route("/since")
 def getTimerRouter():
 
     return jsonify(getTimer())
