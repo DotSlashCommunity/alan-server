@@ -26,7 +26,7 @@ def getDetails(dmodel):
 		database, using an dmodel
 	"""
 	try:
-		playas, actual = dmodel.select().where(dmodel.present != 0), {}
+		playas, actual = dmodel.select(), {}
 		for player in playas:
 			actual[player.roll] = player.name
 	except:
