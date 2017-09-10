@@ -10,11 +10,12 @@ host, argv = argv[-1], argv[:-1]
 # if its in admin mode
 if "--admin" in argv:
 
-    print "[+] Select one of the below: "
+    print "[+] Select one of the below: \n\n"
     print "[1] Clear Session"
     print "[2] Set Login State"
     print "[3] Set Quiz State"
-    print "[4] End Quiz\n"
+    print "[4] End Quiz"
+    print "[5] Start Timer\n\n"
 
     optn = int(raw_input("[+] Enter Selection: "))
     pawd = raw_input("[+] Enter Admin Passwd:")
@@ -23,7 +24,8 @@ if "--admin" in argv:
     try:
         if optn == 1:
             roll = int(raw_input("[+] Session holder's Roll: "))
-
+            print "http://{}/state/clear/{}?w={}".format(
+                    host, roll, pawd)
             reponse = requests.get(
                 "http://{}/state/clear/{}?w={}".format(
                     host, roll, pawd))
@@ -53,6 +55,12 @@ if "--admin" in argv:
                 "http://{}/quiz/end?w={}".format(host, pawd))
 
             print "[+] Successful!", reponse.content, "\n"
+
+        elif optn == 5:
+            reponse = requests.get(
+                "http://{}/timer/start?w={}".format(host, pawd))
+
+            print "[+] Successful!,", reponse.content, "\n"
     
-    except requests.ConnectionError:
+    except requests.ConnectionError as e:
         print "usage: admin.py <command> <AlanServer host:port>"
